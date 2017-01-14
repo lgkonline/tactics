@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <title>Tactics</title>
+
+        <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
+        <link href="style/main.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div id="app">
+            <div id="field-outer">
+                <div id="field">
+                    <div v-for="(r, rIndex) in rows" class="row">
+                        <div v-for="(c, cIndex) in cols" class="col" v-bind:class="{'selectable': selectedFigure && isColSelectable(rIndex, cIndex) && !selectedFigure.moveDirection}" v-on:click="selectCol(rIndex, cIndex)">
+                            <!--<span style="color:white;background:black">r{{rIndex}} c{{cIndex}}</span>-->
+                            <template v-for="(f, fIndex) in figures">
+                                <div v-if="f.coordination.r == rIndex && f.coordination.c == cIndex"
+                                    v-bind:class="[{'active': currentFigure && currentFigure.id == f.id }, 'team-' + f.team, 'orientation-' + f.orientation, 'move-' + f.moveDirection]"
+                                    v-bind:style="{ 'background-color': f.tp > (0.25 * f.maxTp) ? '#34A853' : '#EA4335' }"
+                                    v-bind:data-tp="f.tp"
+                                    v-bind:data-index="fIndex"
+                                    v-on:click="focusFigure(f)"
+                                    class="figure">
+                                </div>
+                            </template>
+                        </div>
+                    </div>               
+                </div>
+            </div>
+
+            <div id="figure-info-outer">
+                <div v-show="gameStarted" class="figure-info left" id="figure-info">
+                    <template v-if="currentFigure">
+                        <strong>{{currentFigure.id}}</strong><br>
+                        TP {{currentFigure.tp}} / {{currentFigure.maxTp}}<br>
+                        MP {{currentFigure.mp}} / {{currentFigure.maxMp}}<br>
+                        Team {{currentFigure.teamObj.id}}
+                    </template>
+                </div>
+
+                <div v-show="focusedFigure" class="figure-info right" id="focused-figure-info">
+                    <template v-if="focusedFigure">
+                        <strong>{{focusedFigure.id}}</strong><br>
+                        TP {{focusedFigure.tp}} / {{focusedFigure.maxTp}}<br>
+                        MP {{focusedFigure.mp}} / {{focusedFigure.maxMp}}<br>
+                        Team {{focusedFigure.teamObj.id}}
+                    </template>
+                </div>
+            </div>
+
+            <div v-if="alertMessage" id="alert">
+                {{alertMessage}}
+            </div>
+
+            <div id="control">
+                <button type="button" v-if="!gameStarted" v-on:click="startGame()">start</button>
+
+                <div id="action-buttons" v-if="currentFigure && !selectedAction">
+                    <button v-for="a in currentFigure.action" type="button"
+                        v-on:click="doAction(a)">
+                        {{a.id}}
+                    </button>
+                </div>
+
+                <template v-if="currentFigure && selectedAction && !showOrientationControls && !isMoving">
+                    <button type="button"
+                        v-on:click="selectedAction = null;selectedFigure = null;showOrientationControls = false">
+                        cancel
+                    </button>
+                </template>                    
+
+                <template v-if="showOrientationControls">
+                    <label>Choose an orientation</label><br>
+                    <button type="button" class="arrow-button" v-on:click="chooseOrientation('top')">&uarr;</button><br><button 
+                    type="button" class="arrow-button" v-on:click="chooseOrientation('left')">&larr;</button><span id="orientation-space"></span><button 
+                    type="button" class="arrow-button" v-on:click="chooseOrientation('right')">&rarr;</button><br><button 
+                    type="button" class="arrow-button" v-on:click="chooseOrientation('bottom')">&darr;</button>                        
+                </template>
+            </div>
+
+            <div id="splash">
+                <div>
+                    <div class="logo">Tactics</div>
+                    LOADING...
+                </div>
+            </div>
+        </div>
+
+        <script src="script/vue.min.js"></script>
+        <script src="script/teams.js"></script>
+        <script src="script/main.js"></script>
+    </body>
+</html> 

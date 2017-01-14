@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<widget xmlns   = "http://www.w3.org/ns/widgets"
+    xmlns:gap   = "http://phonegap.com/ns/1.0"
+    id          = "io.lgk.tactics"
+    versionCode = "10"
+    version     = "1.0.0">
+
+    <name>LGK Tactics</name>
+
+    <description>
+        A cute little tactics game realized using HTML, CSS, JavaScript and Vue.js.
+    </description>
+
+    <author href="https://lgk.io" email="mail@lgk.io">
+        Lars Gerrit Kliesing (LGK)
+    </author>
+
+    <icon src="icon.png" />
+
+    <icon src="res/drawable-mdpi/ic_social_whatshot.png" platform="android" qualifier="mdpi" />
+    <icon src="res/drawable-hdpi/ic_social_whatshot.png" platform="android" qualifier="hdpi" />
+    <icon src="res/drawable-xhdpi/ic_social_whatshot.png" platform="android" qualifier="xhdpi" />
+    <icon src="res/drawable-xxhdpi/ic_social_whatshot.png" platform="android" qualifier="xxhdpi" />
+    <icon src="res/drawable-xxxhdpi/ic_social_whatshot.png" platform="android" qualifier="xxxhdpi" />
+
+    <preference name="windows-arch" value="arm" />
+</widget>
