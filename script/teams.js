@@ -5,7 +5,7 @@ var teams = {
             color: "#52A7C6"
         },
         {
-            id: "Bot",
+            id: "noBot",
             color: "#C02F1E"
         }
     ],

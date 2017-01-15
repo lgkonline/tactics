@@ -259,6 +259,13 @@ button, input {
     display: inline-block;	
 	box-shadow: 1px 1px 0 rgba(0,0,0,.8);
 }
+.figure-info::before {
+	content: "";
+	width: 100px;
+	height: 100px;
+	background: url(../image/Soldier-big.png) no-repeat;
+}
+
 .figure-info.left {
 	left: 0;
     border-left: none;
