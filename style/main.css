@@ -223,7 +223,7 @@ button, input {
 	}		
 }
 
-.figure.selected::before{
+.figure.active::before{
 	background-color: red !important;
 	animation: animate-tp-box .7s infinite;
 }
