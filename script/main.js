@@ -20,7 +20,6 @@ function removeClass(el, className) {
 	}
 }
 
-
 var data = {
 	selectedCols: []
 };
