@@ -224,7 +224,7 @@ button, input {
 }
 
 .figure.active::before{
-	background-color: red !important;
+	background-color: red;
 	animation: animate-tp-box .7s infinite;
 }
 @keyframes animate-tp-box {
