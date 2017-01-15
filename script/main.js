@@ -20,6 +20,7 @@ function removeClass(el, className) {
 	}
 }
 
+
 var data = {
 	selectedCols: []
 };
@@ -200,6 +201,7 @@ var app = new Vue({
 				var el = document.querySelector("#focused-figure-info");
 				el.style.backgroundColor = app.focusedFigure.teamObj.color;
 				addClass(el, "in");
+				addClass(app.focusedFigure, "active");
 				setTimeout(function() {
 					removeClass(el, "in");
 				}, 500);
