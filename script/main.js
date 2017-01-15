@@ -31,59 +31,6 @@ var events = {
 };
 
 var bot = {
-	doTurn2: function() {
-		// console.log("bot, do turn!");
-
-		// if (app.turnNumber == 0) {
-		// 	app.doAction(app.currentFigure.action[0]); // move
-
-		// 	setTimeout(function() {
-		// 		app.selectCol(app.currentFigure.coordination.r-2, app.currentFigure.coordination.c);
-
-		// 		if (app.showOrientationControls) {
-		// 			setTimeout(function() {
-		// 				app.chooseOrientation("top");
-		// 			}, 500);
-		// 		}
-		// 	},500);			
-		// }
-		// if (app.turnNumber == 1) {
-		// 	app.doAction(app.currentFigure.action[2]); // thunder
-
-		// 	setTimeout(function() {
-		// 		app.selectCol(0, 4);
-
-		// 		if (app.showOrientationControls) {
-		// 			setTimeout(function() {
-		// 				app.chooseOrientation("top");
-		// 			}, 500);
-		// 		}
-		// 	},500);				
-		// }
-
-		// if (app.turnNumber == 2) {
-		// 	app.doAction(app.currentFigure.action[0]); // move
-
-		// 	setTimeout(function() {
-		// 		app.selectCol(app.currentFigure.coordination.r-2, app.currentFigure.coordination.c);
-
-		// 		if (app.showOrientationControls) {
-		// 			setTimeout(function() {
-		// 				app.chooseOrientation("top");
-		// 			}, 500);
-		// 		}
-		// 	},500);			
-		// }
-		// if (app.turnNumber == 3) {
-		// 	app.doAction(app.currentFigure.action[3]); // wait
-
-		// 	if (app.showOrientationControls) {
-		// 		setTimeout(function() {
-		// 			app.chooseOrientation("top");
-		// 		}, 500);
-		// 	}			
-		// }		
-	},
 	doTurn: function() {
 		var doAttack = function(action) {
 			app.doAction(action);
@@ -203,7 +150,10 @@ var app = new Vue({
 				setTimeout(function() {
 					removeClass(el, "in");
 				}, 500);
-			}			
+			}
+			else {
+				app.focusedFigure = null;
+			}
 		},
 		alert: function(message) {
 			app.alertMessage = message;

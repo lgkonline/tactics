@@ -19,7 +19,7 @@
                             <!--<span style="color:white;background:black">r{{rIndex}} c{{cIndex}}</span>-->
                             <template v-for="(f, fIndex) in figures">
                                 <div v-if="f.coordination.r == rIndex && f.coordination.c == cIndex"
-                                    v-bind:class="[{'active': currentFigure && currentFigure.id == f.id }, 'team-' + f.team, 'orientation-' + f.orientation, 'move-' + f.moveDirection]"
+                                    v-bind:class="[{'active': currentFigure && currentFigure.id == f.id, 'focus': focusedFigure && focusedFigure.id == f.id }, 'team-' + f.team, 'orientation-' + f.orientation, 'move-' + f.moveDirection]"
                                     v-bind:style="{ 'background-color': f.tp > (0.25 * f.maxTp) ? '#34A853' : '#EA4335' }"
                                     v-bind:data-tp="f.tp"
                                     v-bind:data-index="fIndex"

@@ -2,7 +2,7 @@ var teams = {
     teams: [
         {
             id: "Good",
-            color: "#3AA7A1"
+            color: "#52A7C6"
         },
         {
             id: "Bot",
