@@ -124,16 +124,23 @@ var app = new Vue({
 	methods: {
 		initFigures: function() {
 			for (var i = 0; i < app.figures.length; i++) {
+				// Set max points 
 				app.figures[i].maxTp = app.figures[i].tp;
 				app.figures[i].maxMp = app.figures[i].mp;
+
+				// Set default actions
 				app.figures[i].action.push({
 					id: "wait"
 				});
+
+				// Set team obj into figure object
 				app.figures[i].teamObj = app.teams[app.figures[i].team];
+
 				app.figures[i].moveDirection = false;
 			}
 		},
 		figureInfoIn: function() {
+			// Fade in animation for figure info
 			var el = document.querySelector("#figure-info");
 			el.style.backgroundColor = app.currentFigure.teamObj.color;
 			addClass(el, "in");
@@ -142,6 +149,7 @@ var app = new Vue({
 			}, 500);
 		},
 		focusFigure: function(figure) {
+			// A figure was focused by the user by tipping on it
 			if (app.focusedFigure != figure) {
 				app.focusedFigure = figure;
 				var el = document.querySelector("#focused-figure-info");
@@ -156,12 +164,14 @@ var app = new Vue({
 			}
 		},
 		alert: function(message) {
+			// Put out information
 			app.alertMessage = message;
 			setTimeout(function() {
 				app.alertMessage = null;
 			}, 3000);
 		},
 		getAction: function(figure, actionId) {
+			// Gets the action of a figure based on the action ID
 			for (var j = 0; j < figure.action.length; j++) {
 				if (figure.action[j].id == actionId) 
 					return figure.action[j];
@@ -169,6 +179,7 @@ var app = new Vue({
 			return null;
 		},
 		isColSelectable: function(rIndex, cIndex) {
+			// Calculate if current col is selectable
 			var sR = app.selectedFigure.coordination.r;
 			var sC = app.selectedFigure.coordination.c;
 			var diffR = Math.abs(sR - rIndex);
@@ -182,41 +193,49 @@ var app = new Vue({
 		},
 		selectCol: function(rIndex, cIndex) {
 			var attack = function() {
-					if (Math.random() > app.selectedAction.missRange) {
-						app.figures[i].tp += app.selectedAction.tp;
+				// Check if attack will strike
+				if (Math.random() > app.selectedAction.missRange) {
+					// Manipulate TP of target
+					// If the attack brings damage its TP has to be negative.
+					// If it is heal it has to be positive.
+					app.figures[i].tp += app.selectedAction.tp;
 
-						if (app.figures[i].tp > app.figures[i].maxTp) {
-							app.figures[i].tp = app.figures[i].maxTp;
+					// Check if new TP is not over max TP
+					if (app.figures[i].tp > app.figures[i].maxTp) {
+						app.figures[i].tp = app.figures[i].maxTp;
+					}
+
+					if (app.figures[i].tp <= 0) {
+						// Target figure is dead
+						var team = app.figures[i].team;
+						app.alert(app.figures[i].id + " is KO!");
+						app.figures.splice(i, 1);
+
+						// Check if the figure was the lost one of its team
+						var teamDead = true;
+						var teams = [];
+						for (var j = 0; j < app.figures.length; j++) {
+							if (app.figures[j].team == team) {
+								teamDead = false;
+							}
+							if (!(teams.indexOf(app.figures[j].team) > -1)) {
+								teams.push(app.figures[j].team);
+							}
 						}
-
-						if (app.figures[i].tp <= 0) {
-							var team = app.figures[i].team;
-							app.alert(app.figures[i].id + " is KO!");
-							app.figures.splice(i, 1);
-
-							var teamDead = true;
-							var teams = [];
-							for (var j = 0; j < app.figures.length; j++) {
-								if (app.figures[j].team == team) {
-									teamDead = false;
-								}
-								if (!(teams.indexOf(app.figures[j].team) > -1)) {
-									teams.push(app.figures[j].team);
-								}
-							}
-							if (teams.length <= 1) {
-								// app.alert("Team '" + teams[0] + "' wins!");
-								alert("Team '" + teams[0] + "' wins!\nPlay again?");
-								location.reload();
-							}
-							else if (teamDead) {
-								app.alert("Team '" + team + "' is KO!");
-							}
-						}	
-					}
-					else {
-						app.alert("Missed!");
-					}
+						if (teams.length <= 1) {
+							// No more teams left
+							alert("Team '" + teams[0] + "' wins!\nPlay again?");
+							location.reload();
+						}
+						else if (teamDead) {
+							// The team is KO
+							app.alert("Team '" + team + "' is KO!");
+						}
+					}	
+				}
+				else {
+					app.alert("Missed!");
+				}
 			};
 
 			var timer;
@@ -234,6 +253,7 @@ var app = new Vue({
 				}
 
 				if (app.currentFigure.coordination[prop] != value) {
+					// Didn't get to the target col yet
 					app.isMoving = true;
 					app.currentFigure.moveDirection = figureMoveDirection;
 					if (figureMoveDirection == "top" || figureMoveDirection == "left") {
@@ -244,6 +264,7 @@ var app = new Vue({
 					}
 				}
 				else {
+					// Reached target col, leave
 					if (!figureAfterMove) {
 						finish();
 					}
@@ -255,6 +276,7 @@ var app = new Vue({
 			};
 
 			var finish = function() {
+				// Movement was finished, reset things and dispatch event
 				app.isMoving = false;
 				clearInterval(timer);
 				app.currentFigure.moveDirection = null;
@@ -264,8 +286,11 @@ var app = new Vue({
 
 			if (app.isColSelectable(rIndex, cIndex)) {
 				if (app.selectedAction.id == "move") {
+					// When target col is selectable and action is "move" do animation
+
 					for (var fi = 0; fi < app.figures.length; fi++) {
 						if (app.figures[fi].coordination.r == rIndex && app.figures[fi].coordination.c == cIndex) {
+							// When there is already a figure on the target col, exit
 							return;
 						}
 					}
@@ -326,6 +351,7 @@ var app = new Vue({
 
 					app.currentFigure.orientation = figureMoveDirection;
 
+					// Move step for step to the target col
 					figureMoveChecker();
 					timer = setInterval(figureMoveChecker, 500);
 				}
@@ -362,6 +388,11 @@ var app = new Vue({
 			document.dispatchEvent(events.selectedOrientation);
 		},
 		turn: function(figureIndex, isSubTurn) {
+			// Here everything starts. Each figure always can do two actions. 
+			// So actually turn will always get executed two times. 
+			// That's why isSubTurn exists. When it is true, it is the second  subturn.
+
+			// Reset data about current state
 			app.showOrientationControls = false;
 			app.selectedAction = null;
 			app.selectedFigure = null;
@@ -378,46 +409,58 @@ var app = new Vue({
 
 			app.currentFigure = figure;
 
+			// If is not second turn, fade in figure info
 			if (!isSubTurn) {
 				app.figureInfoIn();
 			}
 
-			var orientationChange = function() {
-				document.removeEventListener("selectedOrientation", orientationChange, false);
-				if (isSubTurn || app.selectedAction.id == "wait") {
-					app.turn(figureIndex+1);
-				}
-				else {
-					app.turn(figureIndex, true);
-				}
+			// Callback functions
+			var callback = {
+				actionChange: function() {
+					if (app.selectedAction.id == "wait") {
+						// If action is "wait" do what comes next
+						callback.afterActionChange();
+					}
+					else {
+						// In case of attack or move wait until target col was selected
+						document.addEventListener("selectedCol", callback.afterActionChange, false);
+					}
+				},
+				afterActionChange: function() {
+					document.removeEventListener("selectedAction", callback.actionChange , false);
+					document.removeEventListener("selectedCol", callback.afterActionChange, false);
+					if (isSubTurn) {
+						// If is second turn wait until user chose the orientation
+						app.showOrientationControls = true;
+						document.addEventListener("selectedOrientation", callback.orientationChange, false);
+					}
+					else {
+						// In other case do what comes next
+						callback.orientationChange();
+					}
+				},
+				orientationChange: function() {
+					document.removeEventListener("selectedOrientation", callback.orientationChange, false);
+					if (isSubTurn || app.selectedAction.id == "wait") {
+						// End turn and change figure
+						app.turn(figureIndex+1);
+					}
+					else {
+						// End turn and start next one as a subturn with the same figure
+						app.turn(figureIndex, true);
+					}
+				}				
 			};
 
-			var actionChange = function() {
-				if (app.selectedAction.id == "wait") {
-					afterActionChange();
-				}
-				else {
-					document.addEventListener("selectedCol", afterActionChange, false);
-				}
-			};
-			var afterActionChange = function() {
-				document.removeEventListener("selectedAction", actionChange , false);
-				document.removeEventListener("selectedCol", afterActionChange, false);
-				if (isSubTurn) {
-					app.showOrientationControls = true;
-					document.addEventListener("selectedOrientation", orientationChange, false);
-				}
-				else {
-					orientationChange();
-				}
-			};
+			// Wait until the user chose an action
+			document.addEventListener("selectedAction", callback.actionChange, false);
 
-			document.addEventListener("selectedAction", actionChange, false);
-
+			// If team is bot, let bot do things
 			if (figure.teamObj.id == "Bot" || figure.teamObj.id == "GoodBot") {
 				bot.doTurn();
 			}
 
+			// Increase the count of turns by 1
 			app.turnNumber++;
 		},
 		startGame: function() {
@@ -427,6 +470,8 @@ var app = new Vue({
 	}
 });
 
+// Initialize figure data
 app.initFigures();
 
+// Removes splash screen when Vue is ready
 document.querySelector("#splash").parentNode.removeChild(document.querySelector("#splash"));

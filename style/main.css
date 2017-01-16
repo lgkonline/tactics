@@ -240,7 +240,7 @@ button, input {
 	box-shadow: 1px 1px 0 rgba(0,0,0,.8);
 }
 .figure.team-1::after {
-	filter: hue-rotate(20deg);
+	filter: hue-rotate(180deg);
 }
 
 #figure-info-outer {
