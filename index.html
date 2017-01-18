@@ -16,7 +16,7 @@
                 <div id="field">
                     <div v-for="(r, rIndex) in rows" class="row">
                         <div v-for="(c, cIndex) in cols" class="col" v-bind:class="{'selectable': selectedFigure && isColSelectable(rIndex, cIndex) && !selectedFigure.moveDirection}" v-on:click="selectCol(rIndex, cIndex)">
-                            <!--<span style="color:white;background:black">r{{rIndex}} c{{cIndex}}</span>-->
+                            <span style="color:white;background:black">r{{rIndex}} c{{cIndex}}</span>
                             <template v-for="(f, fIndex) in figures">
                                 <div v-if="f.coordination.r == rIndex && f.coordination.c == cIndex"
                                     v-bind:class="[{'active': currentFigure && currentFigure.id == f.id, 'focus': focusedFigure && focusedFigure.id == f.id }, 'team-' + f.team, 'orientation-' + f.orientation, 'move-' + f.moveDirection]"
@@ -63,6 +63,10 @@
                     <button v-for="a in currentFigure.action" type="button"
                         v-on:click="doAction(a)">
                         {{a.id}}
+                    </button>
+
+                    <button type="button" v-on:click="getClosestRivalFigure()">
+                        Choose closest rival figure
                     </button>
                 </div>
 

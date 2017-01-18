@@ -33,24 +33,37 @@ var events = {
 var bot = {
 	doTurn: function() {
 		var doAttack = function(action) {
+			var closestRivalFigure = app.getClosestRivalFigure();
+			console.log(closestRivalFigure);
 			app.doAction(action);
 
 			setTimeout(function() {
 				var target = {
 					figure: null,
-					coordination: null	
+					coordination: {
+						r: 1000,
+						c: 1000
+					},
+					diffR: null,
+					diffC: null
 				};
 
+				// Go thru each figure
 				for (var i = 0; i < app.figures.length; i++) {
+					// And thru each selectable col
 					for (var j = 0; j < data.selectedCols.length; j++) {
+
+						// The figure is attackable when action is not "move" and it is on a selectable col
 						var isAttackable = (action.id != "move" && 
 							app.figures[i].coordination.r == data.selectedCols[j].r && 
 							app.figures[i].coordination.c == data.selectedCols[j].c);
 
 						if (isAttackable) {
 							if (app.figures[i].team != app.currentFigure.team) {
+								// Add to selectable figures
 								selectableFigures.push(app.figures[i]);
 
+								// Set figure as target when its TP is lower then the others
 								if (target.figure == null || app.figures[i].tp < target.figure.tp) {
 									target.figure = app.figures[i];
 									target.coordination = app.figures[i].coordination;
@@ -58,11 +71,22 @@ var bot = {
 							}
 						}
 						else if (!isAttackable) {
+
+							console.log(closestRivalFigure);
+
+							var diff = {
+								R: Math.abs(target.coordination.r - closestRivalFigure.coordination.r),
+								C: Math.abs(target.coordination.c - closestRivalFigure.coordination.c)
+							};
+							var diffImportant = diff.R < diff.C ? "R" : "C";
+
 							// move
+							// Set col as target when its row and col number is as low as possible
 							if (target.coordination == null || 
-									(target.coordination.r > data.selectedCols[j].r && target.coordination.c > data.selectedCols[j].c)
+									(target["diff" + diffImportant] < diff[diffImportant])
 								) {
 									target.coordination = data.selectedCols[j];
+									target["diff" + diffImportant] = diff[diffImportant];
 							}
 						}
 					}
@@ -83,6 +107,7 @@ var bot = {
 		var accessible = false;
 
 		if (app.isSubTurn) {
+			// If is second turn try to attack
 			action = app.getAction(app.currentFigure, "thunder");
 			if (action == null || app.currentFigure.mp < action.mpCost) {
 				action = app.getAction(app.currentFigure, "fight");
@@ -90,6 +115,7 @@ var bot = {
 			doAttack(action);
 		}
 		else {
+			// If is first turn try to move
 			action = app.getAction(app.currentFigure, "move");
 			// app.doAction(action);
 			doAttack(action);
@@ -169,6 +195,39 @@ var app = new Vue({
 			setTimeout(function() {
 				app.alertMessage = null;
 			}, 3000);
+		},
+		getClosestRivalFigure: function(figure) {
+			figure = figure || app.currentFigure;
+			var closest = {
+				r: null,
+				diffR: null,
+				c: null,
+				diffC: null
+			};
+
+			for (var i = 0; i < app.figures.length; i++) {
+				if (app.figures[i].team != figure.team) {
+					var diffR = Math.abs(figure.coordination.r - app.figures[i].coordination.r);
+					var diffC = Math.abs(figure.coordination.c - app.figures[i].coordination.c);
+
+					if (closest.r == null || diffR < closest.diffR) {
+						closest.r = app.figures[i];
+						closest.diffR = diffR;
+					}
+
+					if (closest.c == null || diffC < closest.diffC) {
+						closest.c = app.figures[i];
+						closest.diffC = diffC;
+					}
+				}
+			}
+
+			if (closest.diffC < closest.diffR) {
+				return closest.r;
+			}
+			else {
+				return closest.c;
+			}
 		},
 		getAction: function(figure, actionId) {
 			// Gets the action of a figure based on the action ID
