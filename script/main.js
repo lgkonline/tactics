@@ -149,6 +149,7 @@ var app = new Vue({
 		alertMessage: null,
 		isMoving: false,
 		isSubTurn: false,
+		showControls: true,
 		showOrientationControls: false,
 		turnNumber: 0,
 		rows: 6,
@@ -303,7 +304,12 @@ var app = new Vue({
 						}
 						if (teams.length <= 1) {
 							// No more teams left
-							alert("Team '" + teams[0] + "' wins!\nPlay again?");
+							if (teams[0].id == "Good") {
+								alert("You win!\nPlay again?");
+							}
+							else {
+								alert("You loose!\nPlay again?");
+							}
 							location.reload();
 						}
 						else if (teamDead) {
@@ -513,6 +519,7 @@ var app = new Vue({
 					if (isSubTurn || app.selectedAction.id == "wait") {
 						// If is second turn wait until user chose the orientation
 						app.showOrientationControls = true;
+						app.focusFigure(app.focusedFigure);
 						document.addEventListener("selectedOrientation", callback.orientationChange, false);
 					}
 					else {
@@ -524,7 +531,6 @@ var app = new Vue({
 					document.removeEventListener("selectedOrientation", callback.orientationChange, false);
 					if (isSubTurn || app.selectedAction.id == "wait") {
 						// End turn and change figure
-						app.focusFigure(app.focusedFigure);
 						app.turn(figureIndex+1);
 					}
 					else {
@@ -539,7 +545,11 @@ var app = new Vue({
 
 			// If team is bot, let bot do things
 			if (figure.teamObj.id == "Bot" || figure.teamObj.id == "GoodBot") {
+				app.showControls = false;
 				bot.doTurn();
+			}
+			else {
+				app.showControls = true;
 			}
 
 			// Increase the count of turns by 1

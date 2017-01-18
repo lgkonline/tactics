@@ -59,7 +59,7 @@
                 {{alertMessage}}
             </div>
 
-            <div id="control">
+            <div id="control" v-show="showControls">
                 <button type="button" v-if="!gameStarted" v-on:click="startGame()">start</button>
 
                 <div id="action-buttons" v-if="currentFigure && !selectedAction">
