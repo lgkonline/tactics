@@ -137,7 +137,7 @@ var bot = {
 		}
 
 		setTimeout(function() {
-			app.chooseOrientation("top");
+			app.chooseOrientation(app.currentFigure.orientation);
 		}, 1000);
 	}
 };
@@ -259,6 +259,12 @@ var app = new Vue({
 			var diffC = Math.abs(sC - cIndex);
 
 			var retVal = (diffR + diffC) <= app.selectedAction.range;
+			if (retVal && app.selectedAction.id == "move") {
+				retVal = !document.querySelector("#col-r" + rIndex + "-c" + cIndex + " .figure");
+			}
+			else if (retVal) {
+				retVal = document.querySelector("#col-r" + rIndex + "-c" + cIndex + " .figure");
+			}
 			if (retVal) {
 				data.selectedCols.push({r: rIndex, c: cIndex});
 			}
@@ -518,6 +524,7 @@ var app = new Vue({
 					document.removeEventListener("selectedOrientation", callback.orientationChange, false);
 					if (isSubTurn || app.selectedAction.id == "wait") {
 						// End turn and change figure
+						app.focusFigure(app.focusedFigure);
 						app.turn(figureIndex+1);
 					}
 					else {
