@@ -35,6 +35,7 @@ var bot = {
 		var doAttack = function(action) {
 			var closestRivalFigure = app.getClosestRivalFigure();
 			console.log(closestRivalFigure);
+			data.selectedCols = [];
 			app.doAction(action);
 
 			setTimeout(function() {
@@ -44,9 +45,19 @@ var bot = {
 						r: 1000,
 						c: 1000
 					},
-					diffR: null,
-					diffC: null
+					diffR: {
+						r: null,
+						c: null,
+						diff: null
+					},
+					diffC: {
+						r: null,
+						c: null,
+						diff: null
+					}
 				};
+
+				console.log(data.selectedCols);			
 
 				// Go thru each figure
 				for (var i = 0; i < app.figures.length; i++) {
@@ -70,33 +81,36 @@ var bot = {
 								}
 							}
 						}
-						else if (!isAttackable) {
+						else if (action.id == "move" && (app.figures[i].coordination.r != data.selectedCols[j].r || 
+							app.figures[i].coordination.c != data.selectedCols[j].c)) {
 
-							console.log(closestRivalFigure);
+							var diffR = Math.abs(data.selectedCols[j].r - closestRivalFigure.coordination.r);
+							var diffC = Math.abs(data.selectedCols[j].c - closestRivalFigure.coordination.c);
 
-							var diff = {
-								R: Math.abs(target.coordination.r - closestRivalFigure.coordination.r),
-								C: Math.abs(target.coordination.c - closestRivalFigure.coordination.c)
-							};
-							var diffImportant = diff.R < diff.C ? "R" : "C";
+							if (target.diffR.r == null || target.diffR.diff > diffR) {
+								target.diffR = data.selectedCols[j];
+								target.diffR.diff = diffR;
+							}
 
-							// move
-							// Set col as target when its row and col number is as low as possible
-							if (target.coordination == null || 
-									(target["diff" + diffImportant] < diff[diffImportant])
-								) {
-									target.coordination = data.selectedCols[j];
-									target["diff" + diffImportant] = diff[diffImportant];
+							if (target.diffC.c == null || target.diffC.diff > diffC) {
+								target.diffC = data.selectedCols[j];
+								target.diffC.diff = diffC;
 							}
 						}
 					}
 				}
+
+				console.log(target);
+				console.log("----");
 
 				if (action.id != "move" && target.figure == null) {
 					console.log("wait");
 					app.doAction(app.getAction(app.currentFigure, "wait"));
 				}
 				else {
+					if (action.id == "move") {
+						target.coordination = target.diffC.diff < target.diffR.diff ? target.diffC : target.diffR;
+					}
 					app.selectCol(target.coordination.r, target.coordination.c);
 				}
 			}, 500);
@@ -484,11 +498,13 @@ var app = new Vue({
 						// In case of attack or move wait until target col was selected
 						document.addEventListener("selectedCol", callback.afterActionChange, false);
 					}
+
+					
 				},
 				afterActionChange: function() {
 					document.removeEventListener("selectedAction", callback.actionChange , false);
 					document.removeEventListener("selectedCol", callback.afterActionChange, false);
-					if (isSubTurn) {
+					if (isSubTurn || app.selectedAction.id == "wait") {
 						// If is second turn wait until user chose the orientation
 						app.showOrientationControls = true;
 						document.addEventListener("selectedOrientation", callback.orientationChange, false);
