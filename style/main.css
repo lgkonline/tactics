@@ -278,7 +278,8 @@ button, input {
 .figure.active::before {
 	box-shadow: 1px 1px 0 rgba(0,0,0,.8);
 }
-.figure.team-1::after {
+.figure.team-1::after,
+.figure-info-profile.team-1 {
 	filter: hue-rotate(180deg);
 }
 
@@ -286,10 +287,11 @@ button, input {
 	overflow-x: hidden;
 	position: relative;
     width: 100%;
-    height: 110px;	
+    height: 130px;	
 }
 .figure-info {
 	position: absolute;
+	bottom: 3px;
     background-color: #3AA7A1;
     padding: 1rem 2rem 1rem calc((50% - 202px) + 1rem);
     box-sizing: border-box;
@@ -298,11 +300,17 @@ button, input {
     display: inline-block;	
 	box-shadow: 1px 1px 0 rgba(0,0,0,.8);
 }
-.figure-info::before {
-	content: "";
-	width: 100px;
-	height: 100px;
-	background: url(../image/Soldier-big.png) no-repeat;
+.figure-info-profile {
+	height: 124px;
+	width: 80px;
+	background-size: 100%;
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	position: absolute;
+	bottom: 0;
+}
+.figure-info-details {
+	margin-left: 90px;
 }
 
 .figure-info.left {

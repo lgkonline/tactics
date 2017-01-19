@@ -124,7 +124,11 @@ var bot = {
 			// If is second turn try to attack
 			action = app.getAction(app.currentFigure, "thunder");
 			if (action == null || app.currentFigure.mp < action.mpCost) {
-				action = app.getAction(app.currentFigure, "fight");
+				action = app.getAction(app.currentFigure, "fire");
+				
+				if (action == null || app.currentFigure.mp < action.mpCost) {
+					action = app.getAction(app.currentFigure, "fight");
+				}
 			}
 			doAttack(action);
 		}
