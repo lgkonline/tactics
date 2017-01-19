@@ -178,6 +178,7 @@ var app = new Vue({
 				app.figures[i].teamObj = app.teams[app.figures[i].team];
 
 				app.figures[i].moveDirection = false;
+				app.figures[i].damage = 0;
 			}
 		},
 		figureInfoIn: function() {
@@ -279,6 +280,14 @@ var app = new Vue({
 					// If the attack brings damage its TP has to be negative.
 					// If it is heal it has to be positive.
 					app.figures[i].tp += app.selectedAction.tp;
+					// app.figures[i].deviation = 0;
+					app.figures[i].deviation = app.selectedAction.tp > 0 ? "+" + app.selectedAction.tp : app.selectedAction.tp;
+
+					(function(i) {
+						setTimeout(function() {
+							app.figures[i].deviation = 0;
+						}, 1000);
+					})(i);
 
 					// Check if new TP is not over max TP
 					if (app.figures[i].tp > app.figures[i].maxTp) {

@@ -94,15 +94,18 @@ button, input {
 	left: calc(50% - (25px/2));
 	visibility: hidden;
 }
+.figure .deviation,
 .figure::before {
-	content: attr(data-tp);
 	position: absolute;
-	background: inherit;
-	color: white;
 	top: -20px;
 	font-size: .8em;
 	width: 100%;
 	text-align: center;
+}
+.figure::before {
+	content: attr(data-tp);
+	background: inherit;
+	color: white;
 }
 .figure::after {
 	content: "";
@@ -115,6 +118,42 @@ button, input {
 .figure::before,
 .figure::after {
 	visibility: visible;
+}
+
+.figure .deviation {
+	font-weight: bold;
+}
+
+.figure.show-damage::before,
+.figure.show-heal::before {
+	animation: get-damage-animation-1 1s;
+}
+.figure.show-damage .deviation,
+.figure.show-heal .deviation {
+	animation: get-damage-animation-2 1s;
+}
+.figure.show-damage .deviation {
+	color: darkred;
+}
+.figure.show-heal .deviation {
+	color: cornflowerblue;
+}
+@keyframes get-damage-animation-1 {
+	0%, 90% {
+		opacity: .5;
+	}
+}
+@keyframes get-damage-animation-2 {
+	0% {
+		visibility: visible;
+		top: -10px;
+	}
+	90% {
+		top: -20px;
+	}
+	100% {
+		visibility: inherit;
+	}
 }
 
 .figure.active::before,
