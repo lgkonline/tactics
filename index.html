@@ -15,6 +15,7 @@
             <span style="background:gray">
                 Editor's note: In this scenario we have three teams. Two of them are bot controlled. And the one you control has only one member. Let's see how long you can survive...
             </span>
+            <button type="button" id="start-button" v-if="!gameStarted" v-on:click="startGame()">start</button>
             <div id="field-outer">
                 <div id="field">
                     <div v-for="(r, rIndex) in rows" class="row">
@@ -76,8 +77,6 @@
             </div>
 
             <div id="control" v-show="showControls">
-                <button type="button" v-if="!gameStarted" v-on:click="startGame()">start</button>
-
                 <div id="action-buttons" v-if="currentFigure && !selectedAction">
                     <button v-for="a in currentFigure.action" type="button"
                         v-on:click="doAction(a)">
