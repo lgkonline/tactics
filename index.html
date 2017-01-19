@@ -12,7 +12,9 @@
 
     <body>
         <div id="app">
-            Editor's note: Based on the current config two bots are fighting each other. Press 'Start' and see how they are acting.
+            <span style="background:gray">
+                Editor's note: In this scenario we have three teams. Two of them are bot controlled. And the one you control has only one member. Let's see how long you can survive...
+            </span>
             <div id="field-outer">
                 <div id="field">
                     <div v-for="(r, rIndex) in rows" class="row">
@@ -22,14 +24,15 @@
                             v-on:click="selectCol(rIndex, cIndex)">
                             <!--<span style="color:white;background:black">r{{rIndex}} c{{cIndex}}</span>-->
                             <template v-for="(f, fIndex) in figures">
-                                <div v-if="f.coordination.r == rIndex && f.coordination.c == cIndex"
+                                <div v-if="f.coordination.r == rIndex && f.coordination.c == cIndex && f.teamObj"
                                     v-bind:class="[{'active': currentFigure && currentFigure.id == f.id, 
                                             'focus': focusedFigure && focusedFigure.id == f.id,
                                             'show-damage': f.deviation < 0,
                                             'show-heal': f.deviation > 0 }, 
                                             'team-' + f.team, 'orientation-' + f.orientation, 
                                             'move-' + f.moveDirection]"
-                                    v-bind:style="{ 'background-color': f.tp > (0.25 * f.maxTp) ? '#34A853' : '#EA4335' }"
+                                    v-bind:style="{ 'background-color': f.tp > (0.25 * f.maxTp) ? '#34A853' : '#EA4335', 
+                                            'filter': 'hue-rotate(' + f.teamObj.hueRotation + ')' }"
                                     v-bind:data-tp="f.tp"
                                     v-bind:data-index="fIndex"
                                     v-on:click="focusFigure(f)"
@@ -44,10 +47,10 @@
 
             <div id="figure-info-outer">
                 <div v-show="gameStarted" class="figure-info left" id="figure-info">
-                    <template v-if="currentFigure">
+                    <template v-if="currentFigure && currentFigure.teamObj">
                         <div class="figure-info-profile"
                             style="background-image:url(image/Soldier-big.png)"
-                            v-bind:class="'team-' + currentFigure.team"></div>
+                            v-bind:style="{'filter': 'hue-rotate(' + currentFigure.teamObj.hueRotation + ')'}"></div>
 
                         <div class="figure-info-details">
                             <strong>{{currentFigure.id}}</strong><br>

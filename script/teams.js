@@ -7,6 +7,10 @@ var teams = {
         {
             id: "Bot",
             color: "#C02F1E"
+        },
+        {
+            id: "Third",
+            color: "#61C376"
         }
     ],
     figures: [
@@ -42,6 +46,38 @@ var teams = {
             ],
             team: 1
         },
+        {
+            id: "wizard3",
+            tp: 72,
+            mp: 50,
+            maxTp: null,
+            maxMp: null,
+            coordination: {
+                r: 2,
+                c: 0
+            },
+            orientation: "right",
+            action: [ 
+                {
+                    id: "move",
+                    range: 3
+                },
+                {
+                    id: "fight",
+                    range: 1,
+                    tp: -10,
+                    missRange: 0.2
+                },
+                {
+                    id: "thunder",
+                    range: 4,
+                    tp: -25,
+                    mpCost: 27,
+                    missRange: 0.3
+                }
+            ],
+            team: 2
+        },        
         {
             id: "boss2",
             tp: 130,

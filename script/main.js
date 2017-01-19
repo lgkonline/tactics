@@ -125,7 +125,7 @@ var bot = {
 			action = app.getAction(app.currentFigure, "thunder");
 			if (action == null || app.currentFigure.mp < action.mpCost) {
 				action = app.getAction(app.currentFigure, "fire");
-				
+
 				if (action == null || app.currentFigure.mp < action.mpCost) {
 					action = app.getAction(app.currentFigure, "fight");
 				}
@@ -168,6 +168,10 @@ var app = new Vue({
 	},
 	methods: {
 		initFigures: function() {
+			for (var i = 0; i < app.teams.length; i++) {
+				app.teams[i].hueRotation = (180 / (app.teams.length-1) * i) + "deg";
+			}
+
 			for (var i = 0; i < app.figures.length; i++) {
 				// Set max points 
 				app.figures[i].maxTp = app.figures[i].tp;

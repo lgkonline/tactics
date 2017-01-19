@@ -278,10 +278,10 @@ button, input {
 .figure.active::before {
 	box-shadow: 1px 1px 0 rgba(0,0,0,.8);
 }
-.figure.team-1::after,
+/*.figure.team-1::after,
 .figure-info-profile.team-1 {
 	filter: hue-rotate(180deg);
-}
+}*/
 
 #figure-info-outer {
 	overflow-x: hidden;
