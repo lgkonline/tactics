@@ -1,15 +1,15 @@
 var teams = {
     teams: [
         {
-            id: "GoodBot",
+            id: "Bot",
             color: "#52A7C6"
         },
         {
-            id: "Bot",
+            id: "You",
             color: "#C02F1E"
         },
         {
-            id: "Third",
+            id: "GoodBot",
             color: "#61C376"
         }
     ],
@@ -175,7 +175,7 @@ var teams = {
             maxMp: null,
             coordination: {
                 r: 5,
-                c: 5
+                c: 1
             },
             orientation: "top",
             action: [ 

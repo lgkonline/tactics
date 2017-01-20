@@ -170,9 +170,19 @@ var app = new Vue({
 		figures: teams.figures,
 		patterns: [
 			{
-				id: "grass",
+				id: "nothing",
 				coordination: [
 					{ r: 0, c: 0 },
+					{ r: 5, c: 0 },
+					{ r: 0, c: 6 },
+					{ r: 0, c: 7 },
+					{ r: 1, c: 7 }
+				]
+			},
+			{
+				id: "grass",
+				coordination: [
+					{ r: 1, c: 1 },
 					{ r: 0, c: 1 },
 					{ r: 1, c: 0 },
 					{ r: 5, c: 7 },
@@ -191,6 +201,21 @@ var app = new Vue({
 				coordination: [
 					{ r: 4, c: 5 },
 					{ r: 3, c: 5 },
+				]
+			}
+		],
+		objects: [
+			{
+				id: "fence",
+				coordination: [
+					{ r: 5, c: 7 },
+					{ r: 5, c: 6 }
+				]
+			},
+			{
+				id: "fenceStart",
+				coordination: [
+					{ r: 5, c: 5 }
 				]
 			}
 		]
@@ -218,12 +243,12 @@ var app = new Vue({
 				app.figures[i].damage = 0;
 			}
 		},
-		getPatternId: function(rIndex, cIndex) {
+		getId: function(rIndex, cIndex, context) {
 			if (app) {
-				for (var i = 0; i < app.patterns.length; i++) {
-					for (var j = 0; j < app.patterns[i].coordination.length; j++) {
-						if (app.patterns[i].coordination[j].r == rIndex && app.patterns[i].coordination[j].c == cIndex) {
-							return app.patterns[i].id;
+				for (var i = 0; i < app[context].length; i++) {
+					for (var j = 0; j < app[context][i].coordination.length; j++) {
+						if (app[context][i].coordination[j].r == rIndex && app[context][i].coordination[j].c == cIndex) {
+							return app[context][i].id;
 						}
 					}
 				}
@@ -309,7 +334,9 @@ var app = new Vue({
 			var diffR = Math.abs(sR - rIndex);
 			var diffC = Math.abs(sC - cIndex);
 
-			var retVal = (diffR + diffC) <= app.selectedAction.range;
+			// var pattern = app.getId(rIndex, cIndex, "patterns");
+
+			var retVal = (diffR + diffC) <= app.selectedAction.range && app.getId(rIndex, cIndex, "objects") == null && app.getId(rIndex, cIndex, "patterns") != "nothing";
 			if (retVal && app.selectedAction.id == "move") {
 				retVal = !document.querySelector("#col-r" + rIndex + "-c" + cIndex + " .figure");
 			}

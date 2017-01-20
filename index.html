@@ -20,7 +20,7 @@
                 <div id="field">
                     <div v-for="(r, rIndex) in rows" v-for="p in patterns" class="row">
                         <div v-for="(c, cIndex) in cols" class="col" 
-                            v-bind:class="[{'selectable': selectedFigure && isColSelectable(rIndex, cIndex) && !selectedFigure.moveDirection }, 'pattern-' + getPatternId(rIndex, cIndex)]" 
+                            v-bind:class="[{'selectable': selectedFigure && isColSelectable(rIndex, cIndex) && !selectedFigure.moveDirection }, 'pattern-' + getId(rIndex, cIndex, 'patterns')]" 
                             v-bind:id="'col-r' + rIndex + '-c' + cIndex"
                             v-on:click="selectCol(rIndex, cIndex)">
                             <!--<span style="color:white;background:black">r{{rIndex}} c{{cIndex}}</span>-->
@@ -40,6 +40,12 @@
                                     <div class="deviation">{{f.deviation}}</div>
                                     <div class="figure-after" v-bind:style="{ 'filter': 'hue-rotate(' + f.teamObj.hueRotation + ')' }"></div>
                                 </div>
+                            </template>
+
+                            <template v-for="o in objects">
+                                <div v-for="co in o.coordination" v-if="co.r == rIndex && co.c == cIndex"
+                                    v-bind:class="'object-' + o.id"
+                                    class="object"></div>
                             </template>
                         </div>
                     </div>               
