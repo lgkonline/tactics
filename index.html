@@ -18,9 +18,9 @@
             <button type="button" id="start-button" v-if="!gameStarted" v-on:click="startGame()">start</button>
             <div id="field-outer">
                 <div id="field">
-                    <div v-for="(r, rIndex) in rows" class="row">
+                    <div v-for="(r, rIndex) in rows" v-for="p in patterns" class="row">
                         <div v-for="(c, cIndex) in cols" class="col" 
-                            v-bind:class="{'selectable': selectedFigure && isColSelectable(rIndex, cIndex) && !selectedFigure.moveDirection}" 
+                            v-bind:class="[{'selectable': selectedFigure && isColSelectable(rIndex, cIndex) && !selectedFigure.moveDirection }, 'pattern-' + getPatternId(rIndex, cIndex)]" 
                             v-bind:id="'col-r' + rIndex + '-c' + cIndex"
                             v-on:click="selectCol(rIndex, cIndex)">
                             <!--<span style="color:white;background:black">r{{rIndex}} c{{cIndex}}</span>-->
@@ -32,13 +32,13 @@
                                             'show-heal': f.deviation > 0 }, 
                                             'team-' + f.team, 'orientation-' + f.orientation, 
                                             'move-' + f.moveDirection]"
-                                    v-bind:style="{ 'background-color': f.tp > (0.25 * f.maxTp) ? '#34A853' : '#EA4335', 
-                                            'filter': 'hue-rotate(' + f.teamObj.hueRotation + ')' }"
+                                    v-bind:style="{ 'background-color': f.tp > (0.25 * f.maxTp) ? '#34A853' : '#EA4335' }"
                                     v-bind:data-tp="f.tp"
                                     v-bind:data-index="fIndex"
                                     v-on:click="focusFigure(f)"
                                     class="figure">
                                     <div class="deviation">{{f.deviation}}</div>
+                                    <div class="figure-after" v-bind:style="{ 'filter': 'hue-rotate(' + f.teamObj.hueRotation + ')' }"></div>
                                 </div>
                             </template>
                         </div>

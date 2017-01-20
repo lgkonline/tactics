@@ -146,6 +146,8 @@ var bot = {
 	}
 };
 
+Vue.config.debug = true;
+
 var app = new Vue({
 	el: "#app",
 	data: {
@@ -158,16 +160,43 @@ var app = new Vue({
 		turnNumber: 0,
 		rows: 6,
 		cols: 8,
+		colObjs: [],
 		currentFigure: null,
 		selectedFigure: null,
 		focusedFigure: null,
 		selectedAction: null,
 		selectedCols: [],
 		teams: teams.teams,
-		figures: teams.figures
+		figures: teams.figures,
+		patterns: [
+			{
+				id: "grass",
+				coordination: [
+					{ r: 0, c: 0 },
+					{ r: 0, c: 1 },
+					{ r: 1, c: 0 },
+					{ r: 5, c: 7 },
+					{ r: 4, c: 7 },
+					{ r: 5, c: 6 },
+					{ r: 4, c: 6 },
+					{ r: 3, c: 7 },
+					{ r: 3, c: 6 },
+					{ r: 2, c: 7 },
+					{ r: 5, c: 5 },
+					{ r: 5, c: 4 },
+				]
+			},
+			{
+				id: "grassBegin",
+				coordination: [
+					{ r: 4, c: 5 },
+					{ r: 3, c: 5 },
+				]
+			}
+		]
 	},
 	methods: {
-		initFigures: function() {
+		initStuff: function() {
 			for (var i = 0; i < app.teams.length; i++) {
 				app.teams[i].hueRotation = (180 / (app.teams.length-1) * i) + "deg";
 			}
@@ -188,6 +217,18 @@ var app = new Vue({
 				app.figures[i].moveDirection = false;
 				app.figures[i].damage = 0;
 			}
+		},
+		getPatternId: function(rIndex, cIndex) {
+			if (app) {
+				for (var i = 0; i < app.patterns.length; i++) {
+					for (var j = 0; j < app.patterns[i].coordination.length; j++) {
+						if (app.patterns[i].coordination[j].r == rIndex && app.patterns[i].coordination[j].c == cIndex) {
+							return app.patterns[i].id;
+						}
+					}
+				}
+			}
+			return null;
 		},
 		figureInfoIn: function() {
 			// Fade in animation for figure info
@@ -579,8 +620,8 @@ var app = new Vue({
 	}
 });
 
-// Initialize figure data
-app.initFigures();
+// Initialize data
+app.initStuff();
 
 // Removes splash screen when Vue is ready
 document.querySelector("#splash").parentNode.removeChild(document.querySelector("#splash"));
