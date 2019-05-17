@@ -8,7 +8,7 @@ function hasClass(el, className) {
 function addClass(el, className) {
 	if (el.classList)
 		el.classList.add(className)
-	else if (!hasClass(el, className)) 
+	else if (!hasClass(el, className))
 		el.className += " " + className
 }
 
@@ -16,7 +16,7 @@ function removeClass(el, className) {
 	if (el.classList)
 		el.classList.remove(className)
 	else if (hasClass(el, className)) {
-		el.className=el.className.replace(new RegExp('(\\s|^)' + className + '(\\s|$)'), ' ')
+		el.className = el.className.replace(new RegExp('(\\s|^)' + className + '(\\s|$)'), ' ')
 	}
 }
 
@@ -31,14 +31,13 @@ var events = {
 };
 
 var bot = {
-	doTurn: function() {
-		var doAttack = function(action) {
+	doTurn: function () {
+		var doAttack = function (action) {
 			var closestRivalFigure = app.getClosestRivalFigure();
-			console.log(closestRivalFigure);
 			data.selectedCols = [];
 			app.doAction(action);
 
-			setTimeout(function() {
+			setTimeout(function () {
 				var target = {
 					figure: null,
 					coordination: {
@@ -57,16 +56,14 @@ var bot = {
 					}
 				};
 
-				console.log(data.selectedCols);			
-
 				// Go thru each figure
 				for (var i = 0; i < app.figures.length; i++) {
 					// And thru each selectable col
 					for (var j = 0; j < data.selectedCols.length; j++) {
 
 						// The figure is attackable when action is not "move" and it is on a selectable col
-						var isAttackable = (action.id != "move" && 
-							app.figures[i].coordination.r == data.selectedCols[j].r && 
+						var isAttackable = (action.id != "move" &&
+							app.figures[i].coordination.r == data.selectedCols[j].r &&
 							app.figures[i].coordination.c == data.selectedCols[j].c);
 
 						if (isAttackable) {
@@ -81,7 +78,7 @@ var bot = {
 								}
 							}
 						}
-						else if (action.id == "move" && (app.figures[i].coordination.r != data.selectedCols[j].r || 
+						else if (action.id == "move" && (app.figures[i].coordination.r != data.selectedCols[j].r ||
 							app.figures[i].coordination.c != data.selectedCols[j].c)) {
 
 							var diffR = Math.abs(data.selectedCols[j].r - closestRivalFigure.coordination.r);
@@ -100,11 +97,7 @@ var bot = {
 					}
 				}
 
-				console.log(target);
-				console.log("----");
-
 				if (action.id != "move" && target.figure == null) {
-					console.log("wait");
 					app.doAction(app.getAction(app.currentFigure, "wait"));
 				}
 				else {
@@ -140,7 +133,7 @@ var bot = {
 
 		}
 
-		setTimeout(function() {
+		setTimeout(function () {
 			app.chooseOrientation(app.currentFigure.orientation);
 		}, 1000);
 	}
@@ -221,9 +214,9 @@ var app = new Vue({
 		]
 	},
 	methods: {
-		initStuff: function() {
+		initStuff: function () {
 			for (var i = 0; i < app.teams.length; i++) {
-				app.teams[i].hueRotation = (180 / (app.teams.length-1) * i) + "deg";
+				app.teams[i].hueRotation = (180 / (app.teams.length - 1) * i) + "deg";
 			}
 
 			for (var i = 0; i < app.figures.length; i++) {
@@ -243,7 +236,7 @@ var app = new Vue({
 				app.figures[i].damage = 0;
 			}
 		},
-		getId: function(rIndex, cIndex, context) {
+		getId: function (rIndex, cIndex, context) {
 			if (app) {
 				for (var i = 0; i < app[context].length; i++) {
 					for (var j = 0; j < app[context][i].coordination.length; j++) {
@@ -255,23 +248,23 @@ var app = new Vue({
 			}
 			return null;
 		},
-		figureInfoIn: function() {
+		figureInfoIn: function () {
 			// Fade in animation for figure info
 			var el = document.querySelector("#figure-info");
 			el.style.backgroundColor = app.currentFigure.teamObj.color;
 			addClass(el, "in");
-			setTimeout(function() {
+			setTimeout(function () {
 				removeClass(el, "in");
 			}, 500);
 		},
-		focusFigure: function(figure) {
+		focusFigure: function (figure) {
 			// A figure was focused by the user by tipping on it
 			if (app.focusedFigure != figure) {
 				app.focusedFigure = figure;
 				var el = document.querySelector("#focused-figure-info");
 				el.style.backgroundColor = app.focusedFigure.teamObj.color;
 				addClass(el, "in");
-				setTimeout(function() {
+				setTimeout(function () {
 					removeClass(el, "in");
 				}, 500);
 			}
@@ -279,14 +272,14 @@ var app = new Vue({
 				app.focusedFigure = null;
 			}
 		},
-		alert: function(message) {
+		alert: function (message) {
 			// Put out information
 			app.alertMessage = message;
-			setTimeout(function() {
+			setTimeout(function () {
 				app.alertMessage = null;
 			}, 3000);
 		},
-		getClosestRivalFigure: function(figure) {
+		getClosestRivalFigure: function (figure) {
 			figure = figure || app.currentFigure;
 			var closest = {
 				r: null,
@@ -319,15 +312,15 @@ var app = new Vue({
 				return closest.c;
 			}
 		},
-		getAction: function(figure, actionId) {
+		getAction: function (figure, actionId) {
 			// Gets the action of a figure based on the action ID
 			for (var j = 0; j < figure.action.length; j++) {
-				if (figure.action[j].id == actionId) 
+				if (figure.action[j].id == actionId)
 					return figure.action[j];
 			}
 			return null;
 		},
-		isColSelectable: function(rIndex, cIndex) {
+		isColSelectable: function (rIndex, cIndex) {
 			// Calculate if current col is selectable
 			var sR = app.selectedFigure.coordination.r;
 			var sC = app.selectedFigure.coordination.c;
@@ -344,12 +337,12 @@ var app = new Vue({
 				retVal = document.querySelector("#col-r" + rIndex + "-c" + cIndex + " .figure");
 			}
 			if (retVal) {
-				data.selectedCols.push({r: rIndex, c: cIndex});
+				data.selectedCols.push({ r: rIndex, c: cIndex });
 			}
 			return retVal;
 		},
-		selectCol: function(rIndex, cIndex) {
-			var attack = function() {
+		selectCol: function (rIndex, cIndex) {
+			var attack = function () {
 				// Check if attack will strike
 				if (Math.random() > app.selectedAction.missRange) {
 					// Manipulate TP of target
@@ -359,8 +352,8 @@ var app = new Vue({
 					// app.figures[i].deviation = 0;
 					app.figures[i].deviation = app.selectedAction.tp > 0 ? "+" + app.selectedAction.tp : app.selectedAction.tp;
 
-					(function(i) {
-						setTimeout(function() {
+					(function (i) {
+						setTimeout(function () {
 							app.figures[i].deviation = 0;
 						}, 1000);
 					})(i);
@@ -401,7 +394,7 @@ var app = new Vue({
 							// The team is KO
 							app.alert("Team '" + team + "' is KO!");
 						}
-					}	
+					}
 				}
 				else {
 					app.alert("Missed!");
@@ -411,7 +404,8 @@ var app = new Vue({
 			var timer;
 			var figureMoveDirection;
 			var figureAfterMove = null;
-			var figureMoveChecker = function() {
+			var figureMoveChecker = function () {
+
 				var prop, value;
 				if (figureMoveDirection == "top" || figureMoveDirection == "bottom") {
 					prop = "r";
@@ -426,12 +420,24 @@ var app = new Vue({
 					// Didn't get to the target col yet
 					app.isMoving = true;
 					app.currentFigure.moveDirection = figureMoveDirection;
+
+					console.log(app.currentFigure);
+
+					var coordination = JSON.parse(JSON.stringify(app.currentFigure.coordination));
+
 					if (figureMoveDirection == "top" || figureMoveDirection == "left") {
-						app.currentFigure.coordination[prop]--;
+						coordination[prop]--;
 					}
 					else {
-						app.currentFigure.coordination[prop]++;
+						coordination[prop]++;
 					}
+
+					if (!app.isColSelectable(coordination.r, coordination.c)) {
+						// Figure can't walk on this
+						// TO DO: Find alternative path
+					}
+
+					app.currentFigure.coordination = coordination;
 				}
 				else {
 					// Reached target col, leave
@@ -445,7 +451,7 @@ var app = new Vue({
 				}
 			};
 
-			var finish = function() {
+			var finish = function () {
 				// Movement was finished, reset things and dispatch event
 				app.isMoving = false;
 				clearInterval(timer);
@@ -468,7 +474,7 @@ var app = new Vue({
 					if (rIndex < app.currentFigure.coordination.r && cIndex < app.currentFigure.coordination.c) {
 						// top left
 						figureMoveDirection = "top";
-						figureAfterMove = function() {
+						figureAfterMove = function () {
 							figureMoveDoFinish = true;
 							figureMoveDirection = "left";
 							app.currentFigure.orientation = figureMoveDirection;
@@ -477,7 +483,7 @@ var app = new Vue({
 					else if (rIndex < app.currentFigure.coordination.r && cIndex > app.currentFigure.coordination.c) {
 						// top right
 						figureMoveDirection = "top";
-						figureAfterMove = function() {
+						figureAfterMove = function () {
 							figureMoveDoFinish = true;
 							figureMoveDirection = "right";
 							app.currentFigure.orientation = figureMoveDirection;
@@ -486,7 +492,7 @@ var app = new Vue({
 					else if (rIndex > app.currentFigure.coordination.r && cIndex < app.currentFigure.coordination.c) {
 						// bottom left
 						figureMoveDirection = "bottom";
-						figureAfterMove = function() {
+						figureAfterMove = function () {
 							figureMoveDoFinish = true;
 							figureMoveDirection = "left";
 							app.currentFigure.orientation = figureMoveDirection;
@@ -495,12 +501,12 @@ var app = new Vue({
 					else if (rIndex > app.currentFigure.coordination.r && cIndex > app.currentFigure.coordination.c) {
 						// bottom right
 						figureMoveDirection = "bottom";
-						figureAfterMove = function() {
+						figureAfterMove = function () {
 							figureMoveDoFinish = true;
 							figureMoveDirection = "right";
 							app.currentFigure.orientation = figureMoveDirection;
 						};
-					}					
+					}
 					if (rIndex < app.currentFigure.coordination.r) {
 						figureMoveDirection = "top";
 					}
@@ -546,18 +552,18 @@ var app = new Vue({
 				}
 			}
 		},
-		doAction: function(action) {
+		doAction: function (action) {
 			data.selectedCols = [];
 			app.selectedAction = action;
 			app.selectedFigure = app.currentFigure;
 
 			document.dispatchEvent(events.selectedAction);
 		},
-		chooseOrientation: function(orientation) {
+		chooseOrientation: function (orientation) {
 			app.currentFigure.orientation = orientation;
 			document.dispatchEvent(events.selectedOrientation);
 		},
-		turn: function(figureIndex, isSubTurn) {
+		turn: function (figureIndex, isSubTurn) {
 			// Here everything starts. Each figure always can do two actions. 
 			// So actually turn will always get executed two times. 
 			// That's why isSubTurn exists. When it is true, it is the second  subturn.
@@ -572,7 +578,7 @@ var app = new Vue({
 			app.isSubTurn = isSubTurn;
 
 			var figure = app.figures[figureIndex];
-			if (typeof(figure) == "undefined" || figure == null) {
+			if (typeof (figure) == "undefined" || figure == null) {
 				figureIndex = 0;
 				figure = app.figures[figureIndex];
 			}
@@ -586,7 +592,7 @@ var app = new Vue({
 
 			// Callback functions
 			var callback = {
-				actionChange: function() {
+				actionChange: function () {
 					if (app.selectedAction.id == "wait") {
 						// If action is "wait" do what comes next
 						callback.afterActionChange();
@@ -596,10 +602,10 @@ var app = new Vue({
 						document.addEventListener("selectedCol", callback.afterActionChange, false);
 					}
 
-					
+
 				},
-				afterActionChange: function() {
-					document.removeEventListener("selectedAction", callback.actionChange , false);
+				afterActionChange: function () {
+					document.removeEventListener("selectedAction", callback.actionChange, false);
 					document.removeEventListener("selectedCol", callback.afterActionChange, false);
 					if (isSubTurn || app.selectedAction.id == "wait") {
 						// If is second turn wait until user chose the orientation
@@ -612,17 +618,17 @@ var app = new Vue({
 						callback.orientationChange();
 					}
 				},
-				orientationChange: function() {
+				orientationChange: function () {
 					document.removeEventListener("selectedOrientation", callback.orientationChange, false);
 					if (isSubTurn || app.selectedAction.id == "wait") {
 						// End turn and change figure
-						app.turn(figureIndex+1);
+						app.turn(figureIndex + 1);
 					}
 					else {
 						// End turn and start next one as a subturn with the same figure
 						app.turn(figureIndex, true);
 					}
-				}				
+				}
 			};
 
 			// Wait until the user chose an action
@@ -640,7 +646,7 @@ var app = new Vue({
 			// Increase the count of turns by 1
 			app.turnNumber++;
 		},
-		startGame: function() {
+		startGame: function () {
 			app.gameStarted = true;
 			app.turn();
 		}
