@@ -313,6 +313,7 @@ button, input {
 	}
 }
 
+
 .figure.orientation-left.active .figure-after {
 	animation: figure-active-left .7s infinite steps(2);
 }

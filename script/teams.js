@@ -22,10 +22,10 @@ var teams = {
             maxTp: null,
             maxMp: null,
             coordination: {
-                r: 4,
+                r: 3,
                 c: 3
             },
-            orientation: "top",
+            orientation: "right",
             action: [
                 {
                     id: "move",
