@@ -230,26 +230,26 @@ button, input {
 }
 
 .figure.orientation-bottom.active .figure-after {
-	animation: figure-active-down .7s infinite;
+	animation: figure-active-down .7s infinite steps(2);
 }
 @keyframes figure-active-down {
-	0%, 49.9%, 100% {
+	from {
 		background-position: -100px 0;
 	}
-	50%, 99.9% {
-		background-position: -125px 0;
+	to {
+		background-position: -150px 0;
 	}		
 }
 
 .figure.orientation-top.active .figure-after {
-	animation: figure-active-up .7s infinite;
+	animation: figure-active-up .7s infinite steps(2);
 }
 @keyframes figure-active-up {
-	0%, 49.9%, 100% {
+	from {
 		background-position: -25px 0;
 	}
-	50%, 99.9% {
-		background-position: -50px 0;
+	to {
+		background-position: -75px 0;
 	}		
 }
 
@@ -302,26 +302,26 @@ button, input {
 }
 
 .figure.orientation-right.active .figure-after {
-	animation: figure-active-right .7s infinite;
+	animation: figure-active-right .7s infinite steps(2);
 }
 @keyframes figure-active-right {
-	0%, 49.9%, 100% {
+	from {
 		background-position: -25px -25px;
 	}
-	50%, 99.9% {
-		background-position: -50px -25px;
+	to {
+		background-position: -75px -25px;
 	}
 }
 
 .figure.orientation-left.active .figure-after {
-	animation: figure-active-left .7s infinite;
+	animation: figure-active-left .7s infinite steps(2);
 }
 @keyframes figure-active-left {
-	0%, 49.9%, 100% {
+	from {
 		background-position: -100px -25px;
 	}
-	50%, 99.9% {
-		background-position: -125px -25px;
+	to {
+		background-position: -150px -25px;
 	}		
 }
 

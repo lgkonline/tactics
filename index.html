@@ -38,7 +38,7 @@
                                 class="figure">
                                 <div class="deviation">{{f.deviation}}</div>
                                 <div class="figure-after"
-                                    v-bind:style="{ 'filter': 'hue-rotate(' + f.teamObj.hueRotation + ')', 'background-image': 'url(image/' + (f.job || 'soldier') + '.png)', 'transform': f.job === 'wizard' ? 'scale(2)' : '' }">
+                                    v-bind:style="{ 'filter': '1hue-rotate(' + f.teamObj.hueRotation + ')', 'background-image': 'url(image/' + (f.job || 'soldier') + '.png)', 'transform': f.job === 'wizard' ? 'scale(2)' : '' }">
                                 </div>
                             </div>
                         </template>
@@ -56,7 +56,7 @@
             <div v-show="gameStarted" class="figure-info left" id="figure-info">
                 <template v-if="currentFigure && currentFigure.teamObj">
                     <div class="figure-info-profile"
-                        v-bind:style="{'filter': 'hue-rotate(' + currentFigure.teamObj.hueRotation + ')', 'background-image': 'url(image/' + (currentFigure.job || 'soldier') + '-big.png)'}">
+                        v-bind:style="{'filter': '1hue-rotate(' + currentFigure.teamObj.hueRotation + ')', 'background-image': 'url(image/' + (currentFigure.job || 'soldier') + '-big.png)'}">
                     </div>
 
                     <div class="figure-info-details">
