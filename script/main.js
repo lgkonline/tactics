@@ -163,16 +163,6 @@ var app = new Vue({
 		figures: teams.figures,
 		patterns: [
 			{
-				id: "nothing",
-				coordination: [
-					{ r: 0, c: 0 },
-					{ r: 5, c: 0 },
-					{ r: 0, c: 6 },
-					{ r: 0, c: 7 },
-					{ r: 1, c: 7 }
-				]
-			},
-			{
 				id: "grass",
 				coordination: [
 					{ r: 1, c: 1 },

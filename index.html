@@ -1,121 +1,123 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-        <title>Tactics</title>
 
-        <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
-        <link href="style/main.css" rel="stylesheet">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Tactics</title>
 
-    <body>
-        <div id="app">
-            <span style="background:gray">
-                Editor's note: In this scenario we have three teams. Two of them are bot controlled. And the one you control has only one member. Let's see how long you can survive...
-            </span>
-            <button type="button" id="start-button" v-if="!gameStarted" v-on:click="startGame()">start</button>
-            <div id="field-outer">
-                <div id="field">
-                    <div v-for="(r, rIndex) in rows" v-for="p in patterns" class="row">
-                        <div v-for="(c, cIndex) in cols" class="col" 
-                            v-bind:class="[{'selectable': selectedFigure && isColSelectable(rIndex, cIndex) && !selectedFigure.moveDirection }, 'pattern-' + getId(rIndex, cIndex, 'patterns')]" 
-                            v-bind:id="'col-r' + rIndex + '-c' + cIndex"
-                            v-on:click="selectCol(rIndex, cIndex)">
-                            <!--<span style="color:white;background:black">r{{rIndex}} c{{cIndex}}</span>-->
-                            <template v-for="(f, fIndex) in figures">
-                                <div v-if="f.coordination.r == rIndex && f.coordination.c == cIndex && f.teamObj"
-                                    v-bind:class="[{'active': currentFigure && currentFigure.id == f.id, 
+    <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
+    <link href="style/main.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <span style="background:gray">
+            Editor's note: In this scenario we have three teams. Two of them are bot controlled. And the one you control
+            has only one member. Let's see how long you can survive...
+        </span>
+        <button type="button" id="start-button" v-if="!gameStarted" v-on:click="startGame()">start</button>
+        <div id="field-outer">
+            <div id="field">
+                <div v-for="(r, rIndex) in rows" v-for="p in patterns" class="row">
+                    <div v-for="(c, cIndex) in cols" class="col"
+                        v-bind:class="[{'selectable': selectedFigure && isColSelectable(rIndex, cIndex) && !selectedFigure.moveDirection }, 'pattern-' + getId(rIndex, cIndex, 'patterns')]"
+                        v-bind:id="'col-r' + rIndex + '-c' + cIndex" v-on:click="selectCol(rIndex, cIndex)">
+                        <!--<span style="color:white;background:black">r{{rIndex}} c{{cIndex}}</span>-->
+                        <template v-for="(f, fIndex) in figures">
+                            <div v-if="f.coordination.r == rIndex && f.coordination.c == cIndex && f.teamObj"
+                                v-bind:class="[{'active': currentFigure && currentFigure.id == f.id, 
                                             'focus': focusedFigure && focusedFigure.id == f.id,
                                             'show-damage': f.deviation < 0,
                                             'show-heal': f.deviation > 0 }, 
                                             'team-' + f.team, 'orientation-' + f.orientation, 
                                             'move-' + f.moveDirection]"
-                                    v-bind:style="{ 'background-color': f.tp > (0.25 * f.maxTp) ? '#34A853' : '#EA4335' }"
-                                    v-bind:data-tp="f.tp"
-                                    v-bind:data-index="fIndex"
-                                    v-on:click="focusFigure(f)"
-                                    class="figure">
-                                    <div class="deviation">{{f.deviation}}</div>
-                                    <div class="figure-after" v-bind:style="{ 'filter': 'hue-rotate(' + f.teamObj.hueRotation + ')' }"></div>
+                                v-bind:style="{ 'background-color': f.tp > (0.25 * f.maxTp) ? '#34A853' : '#EA4335' }"
+                                v-bind:data-tp="f.tp" v-bind:data-index="fIndex" v-on:click="focusFigure(f)"
+                                class="figure">
+                                <div class="deviation">{{f.deviation}}</div>
+                                <div class="figure-after"
+                                    v-bind:style="{ 'filter': 'hue-rotate(' + f.teamObj.hueRotation + ')', 'background-image': 'url(image/' + (f.job || 'soldier') + '.png)', 'transform': f.job === 'wizard' ? 'scale(2)' : '' }">
                                 </div>
-                            </template>
+                            </div>
+                        </template>
 
-                            <template v-for="o in objects">
-                                <div v-for="co in o.coordination" v-if="co.r == rIndex && co.c == cIndex"
-                                    v-bind:class="'object-' + o.id"
-                                    class="object"></div>
-                            </template>
-                        </div>
-                    </div>               
-                </div>
-            </div>
-
-            <div id="figure-info-outer">
-                <div v-show="gameStarted" class="figure-info left" id="figure-info">
-                    <template v-if="currentFigure && currentFigure.teamObj">
-                        <div class="figure-info-profile"
-                            style="background-image:url(image/Soldier-big2.png)"
-                            v-bind:style="{'filter': 'hue-rotate(' + currentFigure.teamObj.hueRotation + ')'}"></div>
-
-                        <div class="figure-info-details">
-                            <strong>{{currentFigure.id}}</strong><br>
-                            TP {{currentFigure.tp}} / {{currentFigure.maxTp}}<br>
-                            MP {{currentFigure.mp}} / {{currentFigure.maxMp}}<br>
-                            Team {{currentFigure.teamObj.id}}
-                        </div>
-                    </template>
-                </div>
-
-                <div v-show="focusedFigure" class="figure-info right" id="focused-figure-info">
-                    <template v-if="focusedFigure">
-                        <strong>{{focusedFigure.id}}</strong><br>
-                        TP {{focusedFigure.tp}} / {{focusedFigure.maxTp}}<br>
-                        MP {{focusedFigure.mp}} / {{focusedFigure.maxMp}}<br>
-                        Team {{focusedFigure.teamObj.id}}
-                    </template>
-                </div>
-            </div>
-
-            <div v-if="alertMessage" id="alert">
-                {{alertMessage}}
-            </div>
-
-            <div id="control" v-show="showControls">
-                <div id="action-buttons" v-if="currentFigure && !selectedAction">
-                    <button v-for="a in currentFigure.action" type="button"
-                        v-on:click="doAction(a)">
-                        {{a.id}}
-                    </button>
-                </div>
-
-                <template v-if="currentFigure && selectedAction && !showOrientationControls && !isMoving">
-                    <button type="button"
-                        v-on:click="selectedAction = null;selectedFigure = null;showOrientationControls = false">
-                        cancel
-                    </button>
-                </template>                    
-
-                <template v-if="showOrientationControls">
-                    <label>Choose an orientation</label><br>
-                    <button type="button" class="arrow-button" v-on:click="chooseOrientation('top')">&uarr;</button><br><button 
-                    type="button" class="arrow-button" v-on:click="chooseOrientation('left')">&larr;</button><span id="orientation-space"></span><button 
-                    type="button" class="arrow-button" v-on:click="chooseOrientation('right')">&rarr;</button><br><button 
-                    type="button" class="arrow-button" v-on:click="chooseOrientation('bottom')">&darr;</button>                        
-                </template>
-            </div>
-
-            <div id="splash">
-                <div>
-                    <div class="logo">Tactics</div>
-                    LOADING...
+                        <template v-for="o in objects">
+                            <div v-for="co in o.coordination" v-if="co.r == rIndex && co.c == cIndex"
+                                v-bind:class="'object-' + o.id" class="object"></div>
+                        </template>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <script src="script/vue.min.js"></script>
-        <script src="script/teams.js"></script>
-        <script src="script/main.js"></script>
-    </body>
-</html> 
+        <div id="figure-info-outer">
+            <div v-show="gameStarted" class="figure-info left" id="figure-info">
+                <template v-if="currentFigure && currentFigure.teamObj">
+                    <div class="figure-info-profile"
+                        v-bind:style="{'filter': 'hue-rotate(' + currentFigure.teamObj.hueRotation + ')', 'background-image': 'url(image/' + (currentFigure.job || 'soldier') + '-big.png)'}">
+                    </div>
+
+                    <div class="figure-info-details">
+                        <strong>{{currentFigure.id}}</strong><br>
+                        TP {{currentFigure.tp}} / {{currentFigure.maxTp}}<br>
+                        MP {{currentFigure.mp}} / {{currentFigure.maxMp}}<br>
+                        Team {{currentFigure.teamObj.id}}
+                    </div>
+                </template>
+            </div>
+
+            <div v-show="focusedFigure" class="figure-info right" id="focused-figure-info">
+                <template v-if="focusedFigure">
+                    <strong>{{focusedFigure.id}}</strong><br>
+                    TP {{focusedFigure.tp}} / {{focusedFigure.maxTp}}<br>
+                    MP {{focusedFigure.mp}} / {{focusedFigure.maxMp}}<br>
+                    Team {{focusedFigure.teamObj.id}}
+                </template>
+            </div>
+        </div>
+
+        <div v-if="alertMessage" id="alert">
+            {{alertMessage}}
+        </div>
+
+        <div id="control" v-show="showControls">
+            <div id="action-buttons" v-if="currentFigure && !selectedAction">
+                <button v-for="a in currentFigure.action" type="button" v-on:click="doAction(a)">
+                    {{a.id}}
+                </button>
+            </div>
+
+            <template v-if="currentFigure && selectedAction && !showOrientationControls && !isMoving">
+                <button type="button"
+                    v-on:click="selectedAction = null;selectedFigure = null;showOrientationControls = false">
+                    cancel
+                </button>
+            </template>
+
+            <template v-if="showOrientationControls">
+                <label>Choose an orientation</label><br>
+                <button type="button" class="arrow-button"
+                    v-on:click="chooseOrientation('top')">&uarr;</button><br><button type="button" class="arrow-button"
+                    v-on:click="chooseOrientation('left')">&larr;</button><span id="orientation-space"></span><button
+                    type="button" class="arrow-button"
+                    v-on:click="chooseOrientation('right')">&rarr;</button><br><button type="button"
+                    class="arrow-button" v-on:click="chooseOrientation('bottom')">&darr;</button>
+            </template>
+        </div>
+
+        <div id="splash">
+            <div>
+                <div class="logo">Tactics</div>
+                LOADING...
+            </div>
+        </div>
+    </div>
+
+    <script src="script/vue.min.js"></script>
+    <script src="script/teams.js"></script>
+    <script src="script/main.js"></script>
+</body>
+
+</html>

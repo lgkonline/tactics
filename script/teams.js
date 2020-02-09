@@ -16,6 +16,7 @@ var teams = {
     figures: [
         {
             id: "wizard2",
+            job: "wizard",
             tp: 72,
             mp: 50,
             maxTp: null,
@@ -25,7 +26,7 @@ var teams = {
                 c: 3
             },
             orientation: "top",
-            action: [ 
+            action: [
                 {
                     id: "move",
                     range: 3
@@ -48,6 +49,7 @@ var teams = {
         },
         {
             id: "wizard3",
+            job: "wizard",
             tp: 72,
             mp: 50,
             maxTp: null,
@@ -57,7 +59,7 @@ var teams = {
                 c: 0
             },
             orientation: "right",
-            action: [ 
+            action: [
                 {
                     id: "move",
                     range: 3
@@ -77,7 +79,7 @@ var teams = {
                 }
             ],
             team: 2
-        },        
+        },
         {
             id: "boss2",
             tp: 130,
@@ -106,7 +108,7 @@ var teams = {
                     tp: 20,
                     mpCost: 6,
                     missRange: 0
-                }					
+                }
             ],
             team: 1
         },
@@ -121,7 +123,7 @@ var teams = {
                 c: 4
             },
             orientation: "bottom",
-            action: [ 
+            action: [
                 {
                     id: "move",
                     range: 3
@@ -169,6 +171,7 @@ var teams = {
         },
         {
             id: "darkWizard2",
+            job: "wizard",
             tp: 72,
             mp: 60,
             maxTp: null,
@@ -178,7 +181,7 @@ var teams = {
                 c: 1
             },
             orientation: "top",
-            action: [ 
+            action: [
                 {
                     id: "move",
                     range: 3
@@ -289,7 +292,7 @@ var teams = {
             maxMp: null,
             coordination: {
                 r: 5,
-                c: 3					
+                c: 3
             },
             orientation: "top",
             action: [

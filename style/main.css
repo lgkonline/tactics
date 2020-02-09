@@ -163,6 +163,7 @@ button, input {
 	height: 100%;
 	background-image: url(../image/Soldier.png);
 	background-position: -75px 0;
+	background-size: 150px 50px;
 }
 .figure::before,
 .figure .figure-after {
