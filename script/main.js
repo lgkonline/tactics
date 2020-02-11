@@ -152,7 +152,7 @@ var app = new Vue({
 		showOrientationControls: false,
 		turnNumber: 0,
 		rows: 6,
-		cols: 8,
+		cols: 7,
 		colObjs: [],
 		currentFigure: null,
 		selectedFigure: null,
@@ -166,15 +166,12 @@ var app = new Vue({
 				id: "grass",
 				coordination: [
 					{ r: 1, c: 1 },
+					{ r: 0, c: 0 },
 					{ r: 0, c: 1 },
 					{ r: 1, c: 0 },
-					{ r: 5, c: 7 },
-					{ r: 4, c: 7 },
 					{ r: 5, c: 6 },
 					{ r: 4, c: 6 },
-					{ r: 3, c: 7 },
 					{ r: 3, c: 6 },
-					{ r: 2, c: 7 },
 					{ r: 5, c: 5 },
 					{ r: 5, c: 4 },
 				]
@@ -191,14 +188,15 @@ var app = new Vue({
 			{
 				id: "fence",
 				coordination: [
-					{ r: 5, c: 7 },
-					{ r: 5, c: 6 }
+					{ r: 3, c: 0 },
+					{ r: 3, c: 1 },
+					{ r: 3, c: 6 },
 				]
 			},
 			{
 				id: "fenceStart",
 				coordination: [
-					{ r: 5, c: 5 }
+					{ r: 3, c: 5 },
 				]
 			}
 		]
@@ -522,6 +520,8 @@ var app = new Vue({
 					timer = setInterval(figureMoveChecker, 500);
 				}
 				else {
+					var doFinish = true;
+
 					for (var i = 0; i < app.figures.length; i++) {
 						if (app.figures[i].coordination.r == rIndex && app.figures[i].coordination.c == cIndex) {
 							if (app.selectedAction.mpCost) {
@@ -531,6 +531,8 @@ var app = new Vue({
 								}
 								else {
 									app.alert("You don't have enough MP!");
+									// Avoid that this acts like a proceeded action
+									doFinish = false;
 								}
 							}
 							else {
@@ -538,7 +540,9 @@ var app = new Vue({
 							}
 						}
 					}
-					finish();
+					if (doFinish) {
+						finish();
+					}
 				}
 			}
 		},

@@ -18,14 +18,14 @@ var teams = {
             id: "wizard2",
             job: "wizard",
             tp: 72,
-            mp: 50,
+            mp: 5,
             maxTp: null,
             maxMp: null,
             coordination: {
-                r: 3,
+                r: 4,
                 c: 3
             },
-            orientation: "right",
+            orientation: "top",
             action: [
                 {
                     id: "move",

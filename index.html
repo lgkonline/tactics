@@ -13,10 +13,6 @@
 
 <body>
     <div id="app">
-        <span style="background:gray">
-            Editor's note: In this scenario we have three teams. Two of them are bot controlled. And the one you control
-            has only one member. Let's see how long you can survive...
-        </span>
         <button type="button" id="start-button" v-if="!gameStarted" v-on:click="startGame()">start</button>
         <div id="field-outer">
             <div id="field">
@@ -38,7 +34,7 @@
                                 class="figure">
                                 <div class="deviation">{{f.deviation}}</div>
                                 <div class="figure-after"
-                                    v-bind:style="{ 'filter': '1hue-rotate(' + f.teamObj.hueRotation + ')', 'background-image': 'url(image/' + (f.job || 'soldier') + '.png)', 'transform': f.job === 'wizard' ? 'scale(2)' : '' }">
+                                    v-bind:style="{ 'filter': 'hue-rotate(' + f.teamObj.hueRotation + ')', 'background-image': 'url(image/' + (f.job || 'soldier') + '.png)', 'transform': f.job === 'wizard' ? 'scale(2)' : '' }">
                                 </div>
                             </div>
                         </template>
@@ -56,7 +52,7 @@
             <div v-show="gameStarted" class="figure-info left" id="figure-info">
                 <template v-if="currentFigure && currentFigure.teamObj">
                     <div class="figure-info-profile"
-                        v-bind:style="{'filter': '1hue-rotate(' + currentFigure.teamObj.hueRotation + ')', 'background-image': 'url(image/' + (currentFigure.job || 'soldier') + '-big.png)'}">
+                        v-bind:style="{'filter': 'hue-rotate(' + currentFigure.teamObj.hueRotation + ')', 'background-image': 'url(image/' + (currentFigure.job || 'soldier') + '-big.png)'}">
                     </div>
 
                     <div class="figure-info-details">
@@ -115,7 +111,8 @@
         </div>
     </div>
 
-    <script src="script/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- <script src="script/vue.min.js"></script> -->
     <script src="script/teams.js"></script>
     <script src="script/main.js"></script>
 </body>
