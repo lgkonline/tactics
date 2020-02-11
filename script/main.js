@@ -370,12 +370,7 @@ var app = new Vue({
 						}
 						if (teams.length <= 1) {
 							// No more teams left
-							if (teams[0].id == "Good") {
-								alert("You win!\nPlay again?");
-							}
-							else {
-								alert("You loose!\nPlay again?");
-							}
+							alert("Game is over!\nNeeded turns: " + app.turnNumber + "\nPlay again?");
 							location.reload();
 						}
 						else if (teamDead) {
